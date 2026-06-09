@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Teacher Cadre Data Gathering – Subject Wise</title>
+<style>
+  
+
+  :root {
+    --navy: #0D1E3A;
+    --gold: #C8922A;
+    --gold-light: #F0C96B;
+    --teal: #1A6B6B;
+    --teal-light: #E6F4F4;
+    --slate: #4A5568;
+    --mist: #F7F9FC;
+    --white: #FFFFFF;
+    --border: #D1D9E6;
+    --success: #1B7A4A;
+    --error: #B91C1C;
+    --warn: #92400E;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Arial, sans-serif;
+    background: var(--mist);
+    color: var(--navy);
+    min-height: 100vh;
+  }
+
+  /* ── HEADER ── */
+  header {
+    background: var(--navy);
+    color: var(--white);
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 12px rgba(13,30,58,0.3);
+  }
+  .header-inner {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 14px 28px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+  .header-emblem {
+    width: 46px; height: 46px;
+    background: var(--gold);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 22px;
+    flex-shrink: 0;
+  }
+  .header-text h1 {
+    font-family: Georgia, serif;
+    font-size: 16px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+  }
+  .header-text p {
+    font-size: 11px;
+    color: var(--gold-light);
+    margin-top: 2px;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+  .header-badge {
+    margin-left: auto;
+    background: var(--teal);
+    color: #fff;
+    font-size: 11px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-weight: 500;
+    letter-spacing: 0.3px;
+  }
+
+  /* ── MAIN ── */
+  main {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 28px 20px 60px;
+  }
+
+  /* ── SCHOOL INFO CARD ── */
+  .school-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 4px solid var(--gold);
+    border-radius: 8px;
+    padding: 24px 28px;
+    margin-bottom: 24px;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  }
+  .school-card h2 {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    color: var(--navy);
+    margin-bottom: 18px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .school-card h2::after {
+    content: '';
+    flex: 1;
+    height: 1px;
+    background: var(--border);
+  }
+  .form-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 14px;
+  }
+  .form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+  }
+  .form-group label {
+    font-size: 11px;
+    font-weight: 600;
+    color: var(--slate);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .form-group input, .form-group select {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-family: Arial, sans-serif;
+    color: var(--navy);
+    background: var(--white);
+    outline: none;
+    transition: border-color 0.15s;
+  }
+  .form-group input:focus, .form-group select:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 2px rgba(26,107,107,0.12);
+  }
+  .form-group.span2 { grid-column: span 2; }
+
+  /* ── SUBJECT SECTION ── */
+  .section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 16px;
+  }
+  .section-title {
+    font-family: Georgia, serif;
+    font-size: 15px;
+    color: var(--navy);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .section-title .tag {
+    background: var(--teal-light);
+    color: var(--teal);
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    padding: 2px 8px;
+    border-radius: 20px;
+    font-family: Arial, sans-serif;
+    letter-spacing: 0.5px;
+  }
+
+  .btn {
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: all 0.15s;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+  }
+  .btn-primary {
+    background: var(--teal);
+    color: var(--white);
+  }
+  .btn-primary:hover { background: #145959; }
+  .btn-gold {
+    background: var(--gold);
+    color: var(--white);
+  }
+  .btn-gold:hover { background: #a87520; }
+  .btn-outline {
+    background: transparent;
+    border: 1px solid var(--border);
+    color: var(--slate);
+  }
+  .btn-outline:hover { background: var(--mist); }
+  .btn-danger {
+    background: transparent;
+    border: 1px solid #FCA5A5;
+    color: var(--error);
+    padding: 5px 10px;
+    font-size: 11px;
+  }
+  .btn-danger:hover { background: #FEF2F2; }
+
+  /* ── SUBJECT TABLE ── */
+  .subject-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    margin-bottom: 14px;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+    transition: box-shadow 0.2s;
+  }
+  .subject-card:hover { box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+
+  .subject-card-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 18px;
+    background: var(--navy);
+    color: var(--white);
+    cursor: pointer;
+    user-select: none;
+  }
+  .subject-card-header .subj-icon {
+    width: 30px; height: 30px;
+    border-radius: 6px;
+    background: rgba(200,146,42,0.25);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 14px;
+  }
+  .subject-card-header .subj-name {
+    font-weight: 600;
+    font-size: 13px;
+  }
+  .subject-card-header .subj-stream {
+    font-size: 10px;
+    color: var(--gold-light);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .subject-card-header .subj-summary {
+    margin-left: auto;
+    font-size: 11px;
+    color: var(--gold-light);
+    display: flex; align-items: center; gap: 14px;
+  }
+  .stat-pill {
+    display: flex; align-items: center; gap: 4px;
+  }
+  .stat-pill .val {
+    font-weight: 700;
+    font-size: 14px;
+    color: var(--gold);
+  }
+  .stat-pill .lbl {
+    font-size: 10px;
+    color: #9AB;
+  }
+  .chevron {
+    width: 18px; height: 18px;
+    fill: #9AB;
+    transition: transform 0.2s;
+    flex-shrink: 0;
+  }
+  .subject-card.open .chevron { transform: rotate(180deg); }
+
+  .subject-card-body {
+    display: none;
+    padding: 18px 18px 14px;
+  }
+  .subject-card.open .subject-card-body { display: block; }
+
+  .teacher-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    margin-bottom: 12px;
+  }
+  .teacher-table th {
+    background: #EFF4FB;
+    color: var(--slate);
+    font-weight: 600;
+    text-transform: uppercase;
+    font-size: 10px;
+    letter-spacing: 0.4px;
+    padding: 8px 10px;
+    text-align: left;
+    border-bottom: 2px solid var(--border);
+  }
+  .teacher-table td {
+    padding: 6px 6px;
+    border-bottom: 1px solid #F0F4FB;
+    vertical-align: middle;
+  }
+  .teacher-table tr:last-child td { border-bottom: none; }
+  .teacher-table tr:hover td { background: #F9FBFF; }
+  .teacher-table input, .teacher-table select {
+    width: 100%;
+    border: 1px solid var(--border);
+    border-radius: 4px;
+    padding: 5px 7px;
+    font-size: 12px;
+    font-family: Arial, sans-serif;
+    color: var(--navy);
+    background: var(--white);
+    outline: none;
+  }
+  .teacher-table input:focus, .teacher-table select:focus {
+    border-color: var(--teal);
+    box-shadow: 0 0 0 2px rgba(26,107,107,0.1);
+  }
+  .teacher-table input[type="number"] { width: 70px; }
+
+  .gap-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    font-weight: 600;
+    padding: 2px 8px;
+    border-radius: 20px;
+    white-space: nowrap;
+  }
+  .gap-ok    { background: #D1FAE5; color: var(--success); }
+  .gap-over  { background: #FEF3C7; color: var(--warn); }
+  .gap-under { background: #FEE2E2; color: var(--error); }
+
+  .add-teacher-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+  }
+
+  /* ── SUMMARY PANEL ── */
+  .summary-panel {
+    background: var(--navy);
+    border-radius: 8px;
+    padding: 22px 24px;
+    margin-top: 28px;
+    color: var(--white);
+  }
+  .summary-panel h3 {
+    font-family: Georgia, serif;
+    font-size: 14px;
+    color: var(--gold-light);
+    margin-bottom: 16px;
+    letter-spacing: 0.3px;
+  }
+  .summary-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    gap: 14px;
+    margin-bottom: 18px;
+  }
+  .summary-box {
+    background: rgba(255,255,255,0.07);
+    border-radius: 6px;
+    padding: 12px 14px;
+  }
+  .summary-box .val {
+    font-size: 26px;
+    font-weight: 700;
+    color: var(--gold);
+    line-height: 1;
+  }
+  .summary-box .lbl {
+    font-size: 10px;
+    color: #9AB;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-top: 4px;
+  }
+
+  .export-bar {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 18px;
+    padding-top: 18px;
+    border-top: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* ── TOAST ── */
+  #toast {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    background: var(--success);
+    color: #fff;
+    padding: 12px 20px;
+    border-radius: 6px;
+    font-size: 13px;
+    font-weight: 500;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+    z-index: 999;
+  }
+  #toast.show { opacity: 1; }
+
+  /* ── NOTICE BANNER ── */
+  #noticeBanner {
+    background: #E6F4F4;
+    border-bottom: 2px solid var(--teal);
+    text-align: center;
+    padding: 7px 16px;
+    font-size: 12px;
+    color: var(--teal);
+    font-weight: 500;
+    letter-spacing: 0.2px;
+  }
+  #noticeBanner span { margin: 0 8px; opacity: 0.5; }
+
+  @media (max-width: 640px) {
+    .header-inner { padding: 12px 16px; }
+    main { padding: 16px 12px 60px; }
+    .form-grid { grid-template-columns: 1fr 1fr; }
+    .teacher-table { font-size: 11px; }
+    .subj-summary { display: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="header-emblem">🏫</div>
+    <div class="header-text">
+      <h1>Teacher Cadre Data Gathering – Subject Wise</h1>
+      <p>Trincomalee Zonal Education Office &nbsp;|&nbsp; School Level Data Collection</p>
+    </div>
+    <span class="header-badge" id="dateBadge"></span>
+  </div>
+</header>
+
+<div id="noticeBanner">
+  ✔ App loaded successfully &nbsp;|&nbsp; Data saves automatically in your browser
+  <span>|</span> Export CSV when done and send to the Zonal Office
+</div>
+
+  <!-- SCHOOL INFO -->
+  <div class="school-card">
+    <h2>📋 School Identification</h2>
+    <div class="form-grid">
+      <div class="form-group">
+        <label>School Name</label>
+        <input type="text" id="schoolName" placeholder="e.g. Trincomalee Central College">
+      </div>
+      <div class="form-group">
+        <label>School Census Number</label>
+        <input type="text" id="censusNo" placeholder="e.g. 60001">
+      </div>
+      <div class="form-group">
+        <label>Division / DSD</label>
+        <input type="text" id="division" placeholder="e.g. Trincomalee">
+      </div>
+      <div class="form-group">
+        <label>Principal's Name</label>
+        <input type="text" id="principalName" placeholder="Name">
+      </div>
+      <div class="form-group">
+        <label>School Type</label>
+        <select id="schoolType">
+          <option value="">Select…</option>
+          <option>National School</option>
+          <option>Provincial School – Type 1AB</option>
+          <option>Provincial School – Type 1C</option>
+          <option>Provincial School – Type 2</option>
+          <option>Provincial School – Type 3</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Medium of Instruction</label>
+        <select id="medium">
+          <option value="">Select…</option>
+          <option>Sinhala</option>
+          <option>Tamil</option>
+          <option>English</option>
+          <option>Sinhala & Tamil</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Highest Grade Offered</label>
+        <select id="highestGrade">
+          <option value="">Select…</option>
+          <option>Grade 5</option>
+          <option>Grade 8</option>
+          <option>Grade 11 (O/L)</option>
+          <option>Grade 13 (A/L)</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label>Date of Data Collection</label>
+        <input type="date" id="collectionDate">
+      </div>
+    </div>
+  </div>
+
+  <!-- SUBJECT CARDS -->
+  <div class="section-header">
+    <div class="section-title">
+      📚 Subject-Wise Teacher Cadre
+      <span class="tag" id="subjectCountTag">0 Subjects</span>
+    </div>
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-outline" onclick="expandAll()">Expand All</button>
+      <button class="btn btn-primary" onclick="addSubject()">＋ Add Subject</button>
+    </div>
+  </div>
+
+  <div id="subjectContainer"></div>
+
+  <!-- SUMMARY -->
+  <div class="summary-panel">
+    <h3>📊 Cadre Summary</h3>
+    <div class="summary-grid">
+      <div class="summary-box"><div class="val" id="sumSubjects">0</div><div class="lbl">Subjects</div></div>
+      <div class="summary-box"><div class="val" id="sumApproved">0</div><div class="lbl">Approved Cadre</div></div>
+      <div class="summary-box"><div class="val" id="sumPresent">0</div><div class="lbl">Present (Actual)</div></div>
+      <div class="summary-box"><div class="val" id="sumVacant">0</div><div class="lbl">Vacancies</div></div>
+      <div class="summary-box"><div class="val" id="sumExcess">0</div><div class="lbl">Excess</div></div>
+      <div class="summary-box"><div class="val" id="sumTrainedPct">0%</div><div class="lbl">Trained (%)</div></div>
+    </div>
+    <div class="export-bar">
+      <button class="btn btn-gold" onclick="exportCSV()">⬇ Export CSV</button>
+      <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3);" onclick="printReport()">🖨 Print Report</button>
+      <button class="btn btn-outline" style="color:#fff;border-color:rgba(255,255,255,0.3);" onclick="clearAll()">🗑 Clear All Data</button>
+    </div>
+  </div>
+
+</main>
+
+<div id="toast">✔ Data saved</div>
+
+<script>
+// ── DATA ──────────────────────────────────────────────────────────
+const SUBJECT_PRESETS = [
+  { name: "Sinhala Language",       icon: "📖", stream: "Primary / Secondary" },
+  { name: "Tamil Language",         icon: "📖", stream: "Primary / Secondary" },
+  { name: "English Language",       icon: "📖", stream: "Primary / Secondary" },
+  { name: "Mathematics",            icon: "➗", stream: "Primary / Secondary" },
+  { name: "Science",                icon: "🔬", stream: "Secondary" },
+  { name: "History",                icon: "🏛", stream: "Secondary" },
+  { name: "Geography",              icon: "🌏", stream: "Secondary" },
+  { name: "Commerce",               icon: "💼", stream: "Secondary" },
+  { name: "Buddhism / Religion",    icon: "🙏", stream: "Secondary" },
+  { name: "Art",                    icon: "🎨", stream: "Secondary" },
+  { name: "Music",                  icon: "🎵", stream: "Secondary" },
+  { name: "Physical Education",     icon: "⚽", stream: "Secondary" },
+  { name: "ICT",                    icon: "💻", stream: "Secondary" },
+  { name: "Technology",             icon: "⚙️", stream: "Secondary" },
+  { name: "Agriculture",            icon: "🌾", stream: "Secondary" },
+  { name: "Home Economics",         icon: "🏠", stream: "Secondary" },
+  { name: "Health & Physical Ed",   icon: "🏃", stream: "Secondary" },
+  { name: "Combined Maths (A/L)",   icon: "🔢", stream: "A/L Science" },
+  { name: "Physics (A/L)",          icon: "⚛️", stream: "A/L Science" },
+  { name: "Chemistry (A/L)",        icon: "🧪", stream: "A/L Science" },
+  { name: "Biology (A/L)",          icon: "🧬", stream: "A/L Science" },
+  { name: "Economics (A/L)",        icon: "📈", stream: "A/L Commerce" },
+  { name: "Business Studies (A/L)", icon: "🗂", stream: "A/L Commerce" },
+  { name: "Accounting (A/L)",       icon: "🧾", stream: "A/L Commerce" },
+  { name: "Political Science (A/L)",icon: "⚖️", stream: "A/L Arts" },
+  { name: "Logic & Scientific Meth",icon: "🧠", stream: "A/L Arts" },
+  { name: "Sinhala (A/L)",          icon: "📝", stream: "A/L Arts" },
+  { name: "Tamil (A/L)",            icon: "📝", stream: "A/L Arts" },
+  { name: "English (A/L)",          icon: "📝", stream: "A/L Arts" },
+  { name: "Agri Science (A/L)",     icon: "🌱", stream: "A/L Vocational" },
+];
+
+let subjects = [];    // array of subject objects
+let subjectIdSeed = 0;
+
+// ── INIT ──────────────────────────────────────────────────────────
+document.addEventListener('DOMContentLoaded', () => {
+  const today = new Date();
+  document.getElementById('dateBadge').textContent =
+    today.toLocaleDateString('en-GB', { day:'2-digit', month:'short', year:'numeric' });
+  document.getElementById('collectionDate').value = today.toISOString().slice(0,10);
+  loadFromStorage();
+  if (subjects.length === 0) seedDefaults();
+  renderAll();
+  document.querySelectorAll('#schoolName,#censusNo,#division,#principalName,#schoolType,#medium,#highestGrade,#collectionDate')
+    .forEach(el => el.addEventListener('input', () => { saveToStorage(); }));
+});
+
+function seedDefaults() {
+  const defaults = ["Sinhala Language","Tamil Language","English Language","Mathematics","Science","History","ICT","Physical Education"];
+  defaults.forEach(n => {
+    const p = SUBJECT_PRESETS.find(s => s.name === n);
+    addSubjectData(p || { name: n, icon: "📚", stream: "Secondary" });
+  });
+}
+
+// ── STORAGE ───────────────────────────────────────────────────────
+function saveToStorage() {
+  const school = {
+    name: document.getElementById('schoolName').value,
+    census: document.getElementById('censusNo').value,
+    division: document.getElementById('division').value,
+    principal: document.getElementById('principalName').value,
+    type: document.getElementById('schoolType').value,
+    medium: document.getElementById('medium').value,
+    grade: document.getElementById('highestGrade').value,
+    date: document.getElementById('collectionDate').value,
+  };
+  try {
+    localStorage.setItem('tcms_school', JSON.stringify(school));
+    localStorage.setItem('tcms_subjects', JSON.stringify(subjects));
+  } catch(e) {
+    try {
+      sessionStorage.setItem('tcms_school', JSON.stringify(school));
+      sessionStorage.setItem('tcms_subjects', JSON.stringify(subjects));
+    } catch(e2) { /* storage unavailable — data stays in memory */ }
+  }
+}
+function loadFromStorage() {
+  try {
+    const s  = localStorage.getItem('tcms_school')  || sessionStorage.getItem('tcms_school');
+    const sj = localStorage.getItem('tcms_subjects') || sessionStorage.getItem('tcms_subjects');
+    if (s) {
+      const d = JSON.parse(s);
+      document.getElementById('schoolName').value  = d.name    || '';
+      document.getElementById('censusNo').value    = d.census  || '';
+      document.getElementById('division').value    = d.division|| '';
+      document.getElementById('principalName').value = d.principal || '';
+      document.getElementById('schoolType').value  = d.type    || '';
+      document.getElementById('medium').value      = d.medium  || '';
+      document.getElementById('highestGrade').value= d.grade   || '';
+      document.getElementById('collectionDate').value = d.date || '';
+    }
+    if (sj) subjects = JSON.parse(sj);
+    else subjects = [];
+  } catch(e) { subjects = []; }
+}
+
+// ── SUBJECT MANAGEMENT ────────────────────────────────────────────
+function addSubjectData(preset) {
+  const id = ++subjectIdSeed;
+  subjects.push({
+    id, name: preset.name, icon: preset.icon, stream: preset.stream,
+    approvedCadre: 1, teachers: []
+  });
+}
+
+function addSubject() {
+  // Build quick-select popup
+  const existing = subjects.map(s => s.name);
+  const options = SUBJECT_PRESETS.filter(p => !existing.includes(p.name));
+  const customName = prompt(
+    "Enter subject name or choose from list:\n\n" +
+    options.slice(0,20).map((p,i) => `${i+1}. ${p.name}`).join('\n') +
+    "\n\nType a number (1-" + Math.min(options.length,20) + ") or enter a custom name:"
+  );
+  if (!customName) return;
+  const idx = parseInt(customName) - 1;
+  let preset;
+  if (!isNaN(idx) && idx >= 0 && idx < options.length) {
+    preset = options[idx];
+  } else {
+    preset = { name: customName.trim(), icon: "📚", stream: "Secondary" };
+  }
+  addSubjectData(preset);
+  renderAll();
+  saveToStorage();
+  // Open newly added
+  setTimeout(() => {
+    const card = document.querySelector(`[data-subj-id="${subjects[subjects.length-1].id}"]`);
+    if (card && !card.classList.contains('open')) card.classList.add('open');
+  }, 50);
+}
+
+function removeSubject(id) {
+  if (!confirm('Remove this subject and all its teacher records?')) return;
+  subjects = subjects.filter(s => s.id !== id);
+  renderAll();
+  saveToStorage();
+}
+
+// ── TEACHER MANAGEMENT ────────────────────────────────────────────
+function addTeacher(subjId) {
+  const subj = subjects.find(s => s.id === subjId);
+  if (!subj) return;
+  subj.teachers.push({
+    id: Date.now(),
+    name: '', nic: '', gender: '', qualification: '',
+    trained: '', serviceType: '', gradeClass: '', remarks: ''
+  });
+  renderSubjectCard(subj);
+  updateSummary();
+  saveToStorage();
+}
+
+function removeTeacher(subjId, tId) {
+  const subj = subjects.find(s => s.id === subjId);
+  if (!subj) return;
+  subj.teachers = subj.teachers.filter(t => t.id !== tId);
+  renderSubjectCard(subj);
+  updateSummary();
+  saveToStorage();
+}
+
+function updateField(subjId, tId, field, val) {
+  const subj = subjects.find(s => s.id === subjId);
+  if (!subj) return;
+  const teacher = subj.teachers.find(t => t.id === tId);
+  if (teacher) { teacher[field] = val; saveToStorage(); }
+}
+
+function updateApproved(subjId, val) {
+  const subj = subjects.find(s => s.id === subjId);
+  if (subj) { subj.approvedCadre = parseInt(val) || 0; updateSummary(); saveToStorage(); }
+}
+
+// ── RENDER ────────────────────────────────────────────────────────
+function renderAll() {
+  const container = document.getElementById('subjectContainer');
+  container.innerHTML = '';
+  subjects.forEach(subj => {
+    const div = document.createElement('div');
+    div.className = 'subject-card open';
+    div.dataset.subjId = subj.id;
+    container.appendChild(div);
+    renderSubjectCard(subj);
+  });
+  document.getElementById('subjectCountTag').textContent = subjects.length + ' Subject' + (subjects.length !== 1 ? 's' : '');
+  updateSummary();
+}
+
+function renderSubjectCard(subj) {
+  const card = document.querySelector(`[data-subj-id="${subj.id}"]`);
+  if (!card) return;
+  const present = subj.teachers.length;
+  const approved = subj.approvedCadre || 0;
+  const gap = present - approved;
+  let gapHtml = '';
+  if (gap === 0) gapHtml = `<span class="gap-status gap-ok">✔ Filled</span>`;
+  else if (gap > 0) gapHtml = `<span class="gap-status gap-over">▲ Excess: ${gap}</span>`;
+  else gapHtml = `<span class="gap-status gap-under">▼ Vacant: ${Math.abs(gap)}</span>`;
+
+  const trainedCount = subj.teachers.filter(t => t.trained === 'Trained').length;
+
+  const isOpen = card.classList.contains('open');
+
+  card.innerHTML = `
+    <div class="subject-card-header" onclick="toggleCard(${subj.id})">
+      <div class="subj-icon">${subj.icon}</div>
+      <div>
+        <div class="subj-name">${subj.name}</div>
+        <div class="subj-stream">${subj.stream}</div>
+      </div>
+      <div class="subj-summary">
+        <div class="stat-pill"><span class="val">${approved}</span><span class="lbl">Approved</span></div>
+        <div class="stat-pill"><span class="val">${present}</span><span class="lbl">Present</span></div>
+        ${gapHtml}
+      </div>
+      <svg class="chevron" viewBox="0 0 24 24" fill="none" stroke="#99AABB" stroke-width="2" stroke-linecap="round"><path d="M6 9l6 6 6-6"/></svg>
+    </div>
+    <div class="subject-card-body">
+      <div style="display:flex;align-items:center;gap:14px;margin-bottom:12px;flex-wrap:wrap;">
+        <div style="display:flex;align-items:center;gap:6px;">
+          <label style="font-size:11px;font-weight:600;color:#4A5568;white-space:nowrap;">Approved Cadre:</label>
+          <input type="number" min="0" value="${approved}" style="width:70px;border:1px solid #D1D9E6;border-radius:4px;padding:5px 7px;font-size:13px;text-align:center;"
+            onchange="updateApproved(${subj.id}, this.value)">
+        </div>
+        <div style="font-size:11px;color:#4A5568;">
+          Present: <strong>${present}</strong> &nbsp;|&nbsp; Trained: <strong>${trainedCount}</strong>
+          &nbsp;|&nbsp; ${gapHtml}
+        </div>
+        <button class="btn btn-danger" style="margin-left:auto;" onclick="removeSubject(${subj.id})">✕ Remove Subject</button>
+      </div>
+
+      ${present === 0 ? `<p style="color:#9AB;font-size:12px;padding:12px 0;">No teachers added yet. Click "Add Teacher" below.</p>` : `
+      <table class="teacher-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Full Name</th>
+            <th>NIC</th>
+            <th>Gender</th>
+            <th>Qualification</th>
+            <th>Trained / Untrained</th>
+            <th>Service Type</th>
+            <th>Grade / Class</th>
+            <th>Remarks</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          ${subj.teachers.map((t, i) => `
+          <tr>
+            <td style="text-align:center;color:#9AB;font-size:11px;">${i+1}</td>
+            <td><input type="text" value="${t.name}" placeholder="Name" onchange="updateField(${subj.id},${t.id},'name',this.value)"></td>
+            <td><input type="text" value="${t.nic}" placeholder="NIC" style="width:110px;" onchange="updateField(${subj.id},${t.id},'nic',this.value)"></td>
+            <td>
+              <select onchange="updateField(${subj.id},${t.id},'gender',this.value)">
+                <option value="" ${!t.gender?'selected':''}>–</option>
+                <option ${t.gender==='Male'?'selected':''}>Male</option>
+                <option ${t.gender==='Female'?'selected':''}>Female</option>
+              </select>
+            </td>
+            <td>
+              <select onchange="updateField(${subj.id},${t.id},'qualification',this.value)">
+                <option value="" ${!t.qualification?'selected':''}>–</option>
+                <option ${t.qualification==='B.Ed'?'selected':''}>B.Ed</option>
+                <option ${t.qualification==='B.A/B.Sc'?'selected':''}>B.A/B.Sc</option>
+                <option ${t.qualification==='Dip. in Ed'?'selected':''}>Dip. in Ed</option>
+                <option ${t.qualification==='Advanced Cert'?'selected':''}>Advanced Cert</option>
+                <option ${t.qualification==='Other'?'selected':''}>Other</option>
+              </select>
+            </td>
+            <td>
+              <select onchange="updateField(${subj.id},${t.id},'trained',this.value)">
+                <option value="" ${!t.trained?'selected':''}>–</option>
+                <option ${t.trained==='Trained'?'selected':''}>Trained</option>
+                <option ${t.trained==='Untrained'?'selected':''}>Untrained</option>
+              </select>
+            </td>
+            <td>
+              <select onchange="updateField(${subj.id},${t.id},'serviceType',this.value)">
+                <option value="" ${!t.serviceType?'selected':''}>–</option>
+                <option ${t.serviceType==='Permanent'?'selected':''}>Permanent</option>
+                <option ${t.serviceType==='Temporary'?'selected':''}>Temporary</option>
+                <option ${t.serviceType==='Contract'?'selected':''}>Contract</option>
+                <option ${t.serviceType==='Transferred In'?'selected':''}>Transferred In</option>
+              </select>
+            </td>
+            <td>
+              <select onchange="updateField(${subj.id},${t.id},'gradeClass',this.value)">
+                <option value="" ${!t.gradeClass?'selected':''}>–</option>
+                <option ${t.gradeClass==='SL-ES-I'?'selected':''}>SL-ES-I</option>
+                <option ${t.gradeClass==='SL-ES-II'?'selected':''}>SL-ES-II</option>
+                <option ${t.gradeClass==='SL-ES-III'?'selected':''}>SL-ES-III</option>
+              </select>
+            </td>
+            <td><input type="text" value="${t.remarks}" placeholder="Remarks" onchange="updateField(${subj.id},${t.id},'remarks',this.value)"></td>
+            <td><button class="btn btn-danger" onclick="removeTeacher(${subj.id},${t.id})">✕</button></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`}
+
+      <div class="add-teacher-row">
+        <button class="btn btn-primary" onclick="addTeacher(${subj.id})">＋ Add Teacher</button>
+        <span style="font-size:11px;color:#9AB;">${present} teacher${present!==1?'s':''} recorded for ${subj.name}</span>
+      </div>
+    </div>
+  `;
+  if (isOpen) card.classList.add('open');
+}
+
+function toggleCard(id) {
+  const card = document.querySelector(`[data-subj-id="${id}"]`);
+  if (card) card.classList.toggle('open');
+}
+
+function expandAll() {
+  document.querySelectorAll('.subject-card').forEach(c => c.classList.add('open'));
+}
+
+// ── SUMMARY ───────────────────────────────────────────────────────
+function updateSummary() {
+  let approved = 0, present = 0, trained = 0;
+  subjects.forEach(s => {
+    approved += s.approvedCadre || 0;
+    present  += s.teachers.length;
+    trained  += s.teachers.filter(t => t.trained === 'Trained').length;
+  });
+  const vacant  = Math.max(0, approved - present);
+  const excess  = Math.max(0, present - approved);
+  const pct     = present > 0 ? Math.round(trained / present * 100) : 0;
+
+  document.getElementById('sumSubjects').textContent = subjects.length;
+  document.getElementById('sumApproved').textContent = approved;
+  document.getElementById('sumPresent').textContent  = present;
+  document.getElementById('sumVacant').textContent   = vacant;
+  document.getElementById('sumExcess').textContent   = excess;
+  document.getElementById('sumTrainedPct').textContent = pct + '%';
+  document.getElementById('subjectCountTag').textContent = subjects.length + ' Subject' + (subjects.length !== 1 ? 's' : '');
+}
+
+// ── EXPORT CSV ────────────────────────────────────────────────────
+function exportCSV() {
+  const school = document.getElementById('schoolName').value || 'School';
+  const date   = document.getElementById('collectionDate').value || new Date().toISOString().slice(0,10);
+  let rows = [["School","Census No","Division","Date","Subject","Stream","Approved Cadre","Teacher Name","NIC","Gender","Qualification","Trained","Service Type","Grade/Class","Remarks"]];
+  subjects.forEach(s => {
+    if (s.teachers.length === 0) {
+      rows.push([school, document.getElementById('censusNo').value, document.getElementById('division').value, date,
+        s.name, s.stream, s.approvedCadre, '', '', '', '', '', '', '', '']);
+    } else {
+      s.teachers.forEach(t => {
+        rows.push([school, document.getElementById('censusNo').value, document.getElementById('division').value, date,
+          s.name, s.stream, s.approvedCadre, t.name, t.nic, t.gender, t.qualification, t.trained, t.serviceType, t.gradeClass, t.remarks]);
+      });
+    }
+  });
+  const csv = rows.map(r => r.map(v => `"${(v||'').toString().replace(/"/g,'""')}"`).join(',')).join('\n');
+  const a = document.createElement('a');
+  a.href = 'data:text/csv;charset=utf-8,' + encodeURIComponent(csv);
+  a.download = `TeacherCadre_${school.replace(/\s+/g,'_')}_${date}.csv`;
+  a.click();
+  showToast('CSV exported successfully');
+}
+
+function printReport() {
+  window.print();
+}
+
+function clearAll() {
+  if (!confirm('Clear ALL subject and teacher data? School info will be kept.')) return;
+  subjects = [];
+  subjectIdSeed = 0;
+  saveToStorage();
+  renderAll();
+  showToast('All data cleared');
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = '✔ ' + msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+</script>
+</body>
+</html>
